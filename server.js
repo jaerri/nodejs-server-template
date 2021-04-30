@@ -27,10 +27,10 @@ http.createServer((req, res) => {;
                 resDirFiles.forEach(element => {       
                     if (element.endsWith(".js")) {
                         let jsPath = filePath + element;
-                        let content = require(jsPath)(req, parsedURL);
-                        if (content) {
-                            res.writeHead(200, { 'Content-Type': "text/javascript" });
-                            return res.end(content, "utf-8");
+                        let data = require(jsPath)(req, parsedURL);
+                        if (data) {
+                            res.writeHead(200);
+                            return res.end(data, "utf-8");
                         }
                     } else filePath += element;
                 });
