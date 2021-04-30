@@ -20,15 +20,18 @@ http.createServer((req, res) => {;
                 console.log(err);
                 if (err.code == 'ENOENT') res.writeHead(404);
                 else res.writeHead(500);  
-                res.end();
+                return res.end();
             } else
 
             if (stats.isDirectory()) {
                 resDirFiles.forEach(element => {       
                     if (element.endsWith(".js")) {
                         let jsPath = filePath + element;
-                        let content = require(jsPath)(res, parsedURL)
-                        if (content) return res.end(content, "utf-8");
+                        let content = require(jsPath)(req, parsedURL);
+                        if (content) {
+                            res.writeHead(200, { 'Content-Type': "text/javascript" });
+                            return res.end(content, "utf-8");
+                        }
                     } else filePath += element;
                 });
             }
@@ -41,10 +44,10 @@ http.createServer((req, res) => {;
                     console.log(err);
                     if (err.code == 'ENOENT') res.writeHead(404);
                     else res.writeHead(500);  
-                    res.end();
+                    return res.end();
                 } else {
                     res.writeHead(200, { 'Content-Type': contentType });
-                    res.end(content, 'utf-8');
+                    return res.end(content, 'utf-8');
                 }
             });    
         });
