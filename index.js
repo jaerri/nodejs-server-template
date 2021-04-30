@@ -1,35 +1,52 @@
+//importing built in modules, unnecessary but why not
 const http = require("http");
 const fs = require("fs");
 const url = require("url");
 const path = require("path");
 
-const mimeTypes = require("./dev/mimeTypes.json");
-const port = 8080;
-const clientFilesPath = "./data";
-const htmlFileName = "/index.html";
+const mimeTypes = require("./mimeTypes.json"); //taken from internet
+const port = 8080; //port
+const clientFilesPath = "./data"; //the directory that server will get data from
+const resDirFiles = ["server.js", "index.html"]; //execute js file, send html file back to browser
 
 http.createServer((req, res) => {;
-    switch (req.method) {
-        case "GET":
-            let baseURL = 'http://' + req.headers.host + '/';
-            let parsedURL = new url.URL(req.url, baseURL);
+    if (req.method == "GET") {
+        let baseURL = 'http://' + req.headers.host + '/';
+        let parsedURL = new url.URL(req.url, baseURL); //url.parse deprecated so have to do this
+        let filePath = clientFilesPath + parsedURL.pathname;
 
-            let filePath = clientFilesPath + parsedURL.pathname;
-            if (parsedURL.pathname == "/") filePath = clientFilesPath + htmlFileName;
-            let ext = path.extname(filePath).toLowerCase();
-            let contentType = mimeTypes[ext];
+        fs.lstat(filePath, (err, stats) => {
+            if (err) {
+                console.log(err);
+                if (err.code == 'ENOENT') res.writeHead(404);
+                else res.writeHead(500);  
+                res.end();
+            } else
 
-            fs.readFile(filePath, (error, content) => {
-                if (error) {
-                    console.log(error);
-                    if (error.code == 'ENOENT') res.writeHead(404);
+            if (stats.isDirectory()) {
+                resDirFiles.forEach(element => {       
+                    if (element.endsWith(".js")) {
+                        let jsPath = filePath + element;
+                        let content = require(jsPath)(res, parsedURL)
+                        if (content) return res.end(content, "utf-8");
+                    } else filePath += element;
+                });
+            }
+             
+            let fileExt = path.extname(filePath).toLowerCase();
+            let contentType = mimeTypes[fileExt];
+            
+            fs.readFile(filePath, (err, content) => {
+                if (err) {
+                    console.log(err);
+                    if (err.code == 'ENOENT') res.writeHead(404);
                     else res.writeHead(500);  
                     res.end();
                 } else {
                     res.writeHead(200, { 'Content-Type': contentType });
                     res.end(content, 'utf-8');
                 }
-            });
-            break;
+            });    
+        });
     }
 }).listen(process.env.PORT || port, null, null, () => console.log("ae"));
