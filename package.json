@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "made only with nodejs and its built in modules\r <br> nothing much here just use it lmao",
   "main": "index.js",
+  "engines": {
+    "node": "12.19.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
