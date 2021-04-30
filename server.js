@@ -7,7 +7,7 @@ const path = require("path");
 const mimeTypes = require("./mimeTypes.json"); //taken from internet
 const port = 8080; //port
 const clientFilesPath = "./data"; //the directory that server will get data from
-const resDirFiles = ["server.js", "index.html"]; //execute js file, send html file back to browser
+const resDirFiles = ["api.js", "index.html"]; //execute js file, send html file back to browser
 
 http.createServer((req, res) => {;
     if (req.method == "GET") {
