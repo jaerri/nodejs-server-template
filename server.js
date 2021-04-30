@@ -37,8 +37,7 @@ http.createServer((req, res) => {;
             }
              
             let fileExt = path.extname(filePath).toLowerCase();
-            let contentType = mimeTypes[fileExt];
-            
+            let contentType = mimeTypes[fileExt];           
             fs.readFile(filePath, (err, content) => {
                 if (err) {
                     console.log(err);
@@ -47,7 +46,7 @@ http.createServer((req, res) => {;
                     return res.end();
                 } else {
                     res.writeHead(200, { 'Content-Type': contentType });
-                    return res.end(content, 'utf-8');
+                    return res.end(content, "utf-8");
                 }
             });    
         });
