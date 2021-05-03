@@ -7,7 +7,8 @@ const path = require("path");
 const mimeTypes = require("./mimeTypes.json"); //taken from internet
 const port = 8080; //port
 const clientFilesPath = "./data"; //the directory that server will get data from
-const resDirFiles = ["api.js", "index.html"]; //execute js file, send html file back to browser
+const apiFileName = "api.js"; //execute js file
+const htmlFileName = "index.html"; //send html file back to browser
 
 http.createServer((req, res) => {;
     if (req.method == "GET") {
@@ -24,16 +25,12 @@ http.createServer((req, res) => {;
             } else
 
             if (stats.isDirectory()) {
-                resDirFiles.forEach(element => {       
-                    if (element.endsWith(".js")) {
-                        let jsPath = filePath + element;
-                        let data = require(jsPath)(req, parsedURL);
-                        if (data) {
-                            res.writeHead(200);
-                            return res.end(data, "utf-8");
-                        }
-                    } else filePath += element;
-                });
+                let data = require(filePath + apiFileName)(req, parsedURL);
+                if (data) {
+                    res.writeHead(200);
+                    return res.end(data, "utf-8");
+                }
+                else filePath += htmlFileName;
             }
             console.log("wtf");
             let fileExt = path.extname(filePath).toLowerCase();
