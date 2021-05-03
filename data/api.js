@@ -9,7 +9,7 @@ const url = require("url");
 module.exports = (req, url) => {
     let query = url.searchParams;
     if (query.has("data")) {
-        let data = "LMAO"; //placeholder
+        let data = "Goodbye World"; //placeholder
         return data;
     }
 }

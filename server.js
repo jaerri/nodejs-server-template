@@ -32,7 +32,7 @@ http.createServer((req, res) => {;
                 }
                 else filePath += htmlFileName;
             }
-            
+
             let fileExt = path.extname(filePath).toLowerCase();
             let contentType = mimeTypes[fileExt];           
             fs.readFile(filePath, (err, content) => {
@@ -48,4 +48,4 @@ http.createServer((req, res) => {;
             });    
         });
     }
-}).listen(process.env.PORT || port, null, null, () => console.log("ae"));
+}).listen(process.env.PORT || port, null, null, () => console.log("Server on, port 8080"));
