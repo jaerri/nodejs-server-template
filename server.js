@@ -32,7 +32,7 @@ http.createServer((req, res) => {;
                 }
                 else filePath += htmlFileName;
             }
-            console.log("wtf");
+            
             let fileExt = path.extname(filePath).toLowerCase();
             let contentType = mimeTypes[fileExt];           
             fs.readFile(filePath, (err, content) => {
